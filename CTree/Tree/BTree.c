@@ -125,6 +125,7 @@ void BTree_SeqOrder(BTree root, void(*func)(BTree))
         return;
     }
     Queue queue;
+
     InitQueue(&queue);
     
 }
