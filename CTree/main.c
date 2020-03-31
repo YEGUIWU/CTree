@@ -1,8 +1,7 @@
-#include "Tree/Tree.h"
+#include "Tree/BTree.h"
 
 int main()
 {
-    printf("hello world");
-
+	
     return 0;
 }

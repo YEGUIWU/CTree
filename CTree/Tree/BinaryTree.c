@@ -1,4 +1,5 @@
-#include "Tree.h"
+#include "BinaryTree.h"
+
 
 
 
@@ -21,13 +22,13 @@ PtrToTreeNode DestoryTreeNode(PtrToTreeNode P);
 #pragma region 搜索树
 //--------------------------------------------------
 //初始化
-Tree InitializeTree()
+BinaryTree InitializeTree()
 {
 	return NullNode;
 }
 //--------------------------------------------------
 //查找最小
-TreePosition FindMinOnTree(Tree T)
+TreePosition FindMinOnTree(BinaryTree T)
 {
 	if (T == NULL)
 		return NULL;
@@ -38,7 +39,7 @@ TreePosition FindMinOnTree(Tree T)
 }
 //--------------------------------------------------
 //查找最大
-TreePosition FindMaxOnTree(Tree T)
+TreePosition FindMaxOnTree(BinaryTree T)
 {
 	if (T != NULL)
 	{
@@ -52,7 +53,7 @@ TreePosition FindMaxOnTree(Tree T)
 
 //--------------------------------------------------
 //插入元素
-Tree InsertToTree(TreeElementType X, Tree T)
+BinaryTree InsertToTree(TreeElementType X, BinaryTree T)
 {
 	if (T == NULL)
 	{
@@ -73,7 +74,7 @@ Tree InsertToTree(TreeElementType X, Tree T)
 }
 //--------------------------------------------------
 //删除元素
-Tree DeleteFromTree(TreeElementType X, Tree T)
+BinaryTree DeleteFromTree(TreeElementType X, BinaryTree T)
 {
 	TreePosition TmpCell;
 	if (T == NULL)
@@ -150,12 +151,12 @@ static TreePosition DoubleRoteateWithRight(TreePosition K3)
 	return SingleRotateWithLeft(K3);
 }
 //初始化
-Tree InitializeTree()
+BinaryTree InitializeTree()
 {
 	return NullNode;
 }
 //查找最小
-TreePosition FindMinOnTree(Tree T)
+TreePosition FindMinOnTree(BinaryTree T)
 {
 	if (T == NULL)
 		return NULL;
@@ -165,7 +166,7 @@ TreePosition FindMinOnTree(Tree T)
 		return FindMinOnTree(T->Left);
 }
 //查找最大
-TreePosition FindMaxOnTree(Tree T)
+TreePosition FindMaxOnTree(BinaryTree T)
 {
 	if (T != NULL)
 	{
@@ -177,7 +178,7 @@ TreePosition FindMaxOnTree(Tree T)
 	return T;
 }
 //插入元素
-Tree InsertToTree(TreeElementType X, Tree T)
+BinaryTree InsertToTree(TreeElementType X, BinaryTree T)
 {
 	if (T == NULL)
 	{
@@ -218,7 +219,7 @@ Tree InsertToTree(TreeElementType X, Tree T)
 	return T;
 }
 //删除元素
-Tree DeleteFromTree(TreeElementType X, Tree T)
+BinaryTree DeleteFromTree(TreeElementType X, BinaryTree T)
 {
 	TreePosition TmpCell;
 	if (T == NULL)
@@ -284,7 +285,7 @@ static TreePosition DoubleRoteateWithRight(TreePosition K3)
 
 //---------------------------------------------------------
 //初始化
-Tree InitializeTree()
+BinaryTree InitializeTree()
 {
 	if (NullNode == NULL)
 	{
@@ -295,7 +296,7 @@ Tree InitializeTree()
 }
 //---------------------------------------------------------
 //伸展
-Tree SplayTheTree(TreeElementType Item, TreePosition P)
+BinaryTree SplayTheTree(TreeElementType Item, TreePosition P)
 {
 	TreeNode Header;
 	TreePosition LeftTreeMax, RightTreeMin;
@@ -339,7 +340,7 @@ Tree SplayTheTree(TreeElementType Item, TreePosition P)
 }
 //---------------------------------------------------------
 //将元素 X 插入到树T
-Tree InsertToTree(TreeElementType Item, Tree T)
+BinaryTree InsertToTree(TreeElementType Item, BinaryTree T)
 {
 	static TreePosition NewNode = NULL;
 	if (!NewNode)
@@ -379,7 +380,7 @@ Tree InsertToTree(TreeElementType Item, Tree T)
 }
 //---------------------------------------------------------
 //删除元素
-Tree DeleteFromTree(TreeElementType Item, Tree T)
+BinaryTree DeleteFromTree(TreeElementType Item, BinaryTree T)
 {
 	TreePosition NewTree;
 	if (T != NullNode)
@@ -404,7 +405,7 @@ Tree DeleteFromTree(TreeElementType Item, Tree T)
 }
 //--------------------------------------
 //查找最小，返回位置
-TreePosition FindMinOnTree(Tree T)
+TreePosition FindMinOnTree(BinaryTree T)
 {
 	if (T == NULL)
 		return NULL;
@@ -415,7 +416,7 @@ TreePosition FindMinOnTree(Tree T)
 }
 //-------------------------------------
 //查找最大，返回位置
-TreePosition FindMaxOnTree(Tree T)
+TreePosition FindMaxOnTree(BinaryTree T)
 {
 	if (T != NULL)
 	{
@@ -429,7 +430,7 @@ TreePosition FindMaxOnTree(Tree T)
 #pragma endregion
 #elif REDBLACK_TREE
 //初始化
-Tree InitializeTree()
+BinaryTree InitializeTree()
 {
 	if (!NullNode)//== NULL
 	{
@@ -475,7 +476,7 @@ static TreePosition Rotate(TreeElementType Item, TreePosition Parent)
 	}
 }
 //------------------------------------------------------------
-static void DoPrint(RedBlackTree T)
+static void DoPrint(BinaryTree T)
 {
 	if (T != NullNode)
 	{
@@ -484,13 +485,13 @@ static void DoPrint(RedBlackTree T)
 		DoPrint(T->Right);
 	}
 }
-void PrintTree(RedBlackTree T)
+void PrintTree(BinaryTree T)
 {
 	DoPrint(T->Right);
 }
 //--------------------------------------------------------------
 static TreePosition X, P, GP, GGP;
-static void HandleReorient(TreeElementType Item, RedBlackTree T)
+static void HandleReorient(TreeElementType Item, BinaryTree T)
 {
 	X->Color = Red;//Do the color flip
 	X->Left->Color = Black;
@@ -507,7 +508,7 @@ static void HandleReorient(TreeElementType Item, RedBlackTree T)
 	}
 	T->Right->Color = Black;//Make root black
 }
-Tree InsertToTree(TreeElementType Item, Tree T)
+BinaryTree InsertToTree(TreeElementType Item, BinaryTree T)
 {
 	X = P = GP = T;
 	NullNode->Element = Item;
@@ -547,7 +548,7 @@ Tree InsertToTree(TreeElementType Item, Tree T)
 //构造树结点
 PtrToTreeNode MakeTreeNode(TreeElementType X)
 {
-	PtrToTreeNode p = (PtrToTreeNode) calloc(1, sizeof(TreeNode));
+	PtrToTreeNode p = (PtrToTreeNode)calloc(1, sizeof(TreeNode));
 	if (p)
 		p->Element = X;
 	else
@@ -584,7 +585,7 @@ TreeElementType RetrieveFromTreePos(TreePosition P)
 }
 //--------------------------------------------------
 //显示元素
-void DisplayTreeElement(TreeElementType *X)
+void DisplayTreeElement(TreeElementType* X)
 {
 	printf("%d ", *X);
 }
@@ -597,7 +598,7 @@ void DisplayTreePos(TreePosition P)
 }
 //--------------------------------------------------
 //查找树
-TreePosition FindElementFromTree(TreeElementType X, Tree T)
+TreePosition FindElementFromTree(TreeElementType X, BinaryTree T)
 {
 	if (T == NULL)
 		return NULL;
@@ -610,7 +611,7 @@ TreePosition FindElementFromTree(TreeElementType X, Tree T)
 }
 //--------------------------------------------------
 //清空树
-Tree DestroyTree(Tree T)
+BinaryTree DestroyTree(BinaryTree T)
 {
 	if (T != NULL)
 	{
@@ -627,7 +628,7 @@ Tree DestroyTree(Tree T)
 #include "stack/stack.h"
 #endif // NON_RECURSION
 //先序遍历
-void PreOrder(Tree root, void(*func)(Tree))
+void PreOrder(BinaryTree root, void(*func)(BinaryTree))
 {
 	//递归版本
 #ifndef NON_RECURSION 
@@ -644,29 +645,29 @@ void PreOrder(Tree root, void(*func)(Tree))
 		TreeError("树为空!\n");
 		return;
 	}
-	Tree tmpTree = root;
+	BinaryTree tmpBinaryTree = root;
 	Stack S;
 	InitStack(&S);
-	while (!TreeIsEmpty(tmpTree) || !StackIsEmpty(S))
+	while (!TreeIsEmpty(tmpBinaryTree) || !StackIsEmpty(S))
 	{
-		if (!TreeIsEmpty(tmpTree))
+		if (!TreeIsEmpty(tmpBinaryTree))
 		{
-			func(tmpTree);
-			S = Push(tmpTree, S);
-			tmpTree = tmpTree->Left;
+			func(tmpBinaryTree);
+			S = Push(tmpBinaryTree, S);
+			tmpBinaryTree = tmpBinaryTree->Left;
 		}
 		else
 		{
-			tmpTree = (Tree)Top(S);
+			tmpBinaryTree = (BinaryTree)Top(S);
 			S = Pop(S);
-			tmpTree = tmpTree->Right;
+			tmpBinaryTree = tmpBinaryTree->Right;
 		}
 	}
 #endif // !NON_RECURSION
 }
 
 //中序遍历
-void InOrder(Tree root, void(*func)(Tree))
+void InOrder(BinaryTree root, void(*func)(BinaryTree))
 {
 	//递归版本
 #ifndef NON_RECURSION 
@@ -683,29 +684,29 @@ void InOrder(Tree root, void(*func)(Tree))
 		TreeError("树为空!\n");
 		return;
 	}
-	Tree tmpTree = root;
+	BinaryTree tmpBinaryTree = root;
 	Stack S;
 	InitStack(&S);
-	while (!TreeIsEmpty(tmpTree) || !StackIsEmpty(S))
+	while (!TreeIsEmpty(tmpBinaryTree) || !StackIsEmpty(S))
 	{
-		if (!TreeIsEmpty(tmpTree))
+		if (!TreeIsEmpty(tmpBinaryTree))
 		{
-			S = Push(tmpTree, S);
-			tmpTree = tmpTree->Left;
+			S = Push(tmpBinaryTree, S);
+			tmpBinaryTree = tmpBinaryTree->Left;
 		}
 		else
 		{
-			tmpTree = (Tree)Top(S);
-			func(tmpTree);
+			tmpBinaryTree = (BinaryTree)Top(S);
+			func(tmpBinaryTree);
 			S = Pop(S);
-			tmpTree = tmpTree->Right;
+			tmpBinaryTree = tmpBinaryTree->Right;
 		}
 	}
 #endif // !NON_RECURSION
 }
 
 //后序遍历
-void PostOrder(Tree root, void(*func)(Tree))
+void PostOrder(BinaryTree root, void(*func)(BinaryTree))
 {
 	//递归版本
 #ifndef NON_RECURSION 
@@ -722,31 +723,31 @@ void PostOrder(Tree root, void(*func)(Tree))
 		TreeError("树为空!\n");
 		return;
 	}
-	Tree tmpTree = root;
+	BinaryTree tmpBinaryTree = root;
 	Stack S;
 	InitStack(&S);
-	while (!TreeIsEmpty(tmpTree) || !StackIsEmpty(S))
+	while (!TreeIsEmpty(tmpBinaryTree) || !StackIsEmpty(S))
 	{
-		if (!TreeIsEmpty(tmpTree))
+		if (!TreeIsEmpty(tmpBinaryTree))
 		{
-			tmpTree->VisitCount = 1;
-			S = Push(tmpTree, S);
-			tmpTree = tmpTree->Left;
+			tmpBinaryTree->VisitCount = 1;
+			S = Push(tmpBinaryTree, S);
+			tmpBinaryTree = tmpBinaryTree->Left;
 		}
 		else
 		{
-			tmpTree = (Tree)Top(S);
+			tmpBinaryTree = (BinaryTree)Top(S);
 			S = Pop(S);
-			if (tmpTree->VisitCount == 2)
+			if (tmpBinaryTree->VisitCount == 2)
 			{
-				func(tmpTree);
-				tmpTree = NULL;
+				func(tmpBinaryTree);
+				tmpBinaryTree = NULL;
 			}
 			else
 			{
-				++tmpTree->VisitCount;
-				S = Push(tmpTree, S);
-				tmpTree = tmpTree->Right;
+				++tmpBinaryTree->VisitCount;
+				S = Push(tmpBinaryTree, S);
+				tmpBinaryTree = tmpBinaryTree->Right;
 			}
 		}
 	}
@@ -756,9 +757,9 @@ void PostOrder(Tree root, void(*func)(Tree))
 //层序遍历
 #ifdef SEQUENCE_ORDER
 #include "queue/queue.h"
-void SeqOrder(Tree root, void(*func)(Tree))
+void SeqOrder(BinaryTree root, void(*func)(BinaryTree))
 {
-	if (TreeIsEmpty(root)) 
+	if (TreeIsEmpty(root))
 	{
 		TreeError("树为空!\n");
 		return;
@@ -767,22 +768,22 @@ void SeqOrder(Tree root, void(*func)(Tree))
 	Queue Q;
 	InitQueue(&Q);
 	Q = EnQueue(root, Q);					 //根结点先入队
-	Tree tmpTree = root;
+	BinaryTree tmpBinaryTree = root;
 
 	while (!QueueIsEmpty(Q))				 //队列不空
 	{
-		tmpTree = FirstOfQueue(Q);			 //获取队头元素
+		tmpBinaryTree = FirstOfQueue(Q);			 //获取队头元素
 		Q = DeQueue(Q);						 //对头离队
-		func(tmpTree);						 //访问当前树结点
+		func(tmpBinaryTree);						 //访问当前树结点
 
-		if (!TreeIsEmpty(tmpTree->Left))	 //左子树是否为空
+		if (!TreeIsEmpty(tmpBinaryTree->Left))	 //左子树是否为空
 		{
-			Q = EnQueue(tmpTree->Left, Q);   //不为空入队
+			Q = EnQueue(tmpBinaryTree->Left, Q);   //不为空入队
 		}
-		if (!TreeIsEmpty(tmpTree->Right))	 //右子树是否为空
+		if (!TreeIsEmpty(tmpBinaryTree->Right))	 //右子树是否为空
 		{
-			Q = EnQueue(tmpTree->Right, Q);  //不为空入队
-		}		
+			Q = EnQueue(tmpBinaryTree->Right, Q);  //不为空入队
+		}
 	}
 }
 #endif // USE_SEQUENCE_ORDER
@@ -790,7 +791,7 @@ void SeqOrder(Tree root, void(*func)(Tree))
 
 //---------------------------------------------------------
 //判断树是否为空
-_Bool TreeIsEmpty(Tree tree)
+_Bool TreeIsEmpty(BinaryTree tree)
 {
 	return tree == NullNode || tree == NULL;
 }
@@ -806,17 +807,17 @@ _Bool IsLeaf(TreePosition P)
 }
 //--------------------------------------------------------
 //计算叶子结点个数
-static void CountLeafBasic(Tree root, int* count)
+static void CountLeafBasic(BinaryTree root, int* count)
 {
 	if (root)
 	{
 		if (!root->Left && !root->Right)
-			++*count;
+			++* count;
 		CountLeafBasic(root->Left, count);
 		CountLeafBasic(root->Right, count);
 	}
 }
-int CountLeaf(Tree root)
+int CountLeaf(BinaryTree root)
 {
 	int count = 0;
 	CountLeafBasic(root, &count);
@@ -824,7 +825,7 @@ int CountLeaf(Tree root)
 }
 //--------------------------------------------------------
 //计算一棵树的深度
-static int CountDepthBasic(Tree root, int count)
+static int CountDepthBasic(BinaryTree root, int count)
 {
 	if (TreeIsEmpty(root))
 		return count;
@@ -836,13 +837,13 @@ static int CountDepthBasic(Tree root, int count)
 		return left > right ? left : right;
 	}
 }
-int CountDepth(Tree root)
+int CountDepth(BinaryTree root)
 {
 	return CountDepthBasic(root, 0);
 }
 //--------------------------------------------------------
 //拷贝一棵树
-Tree CopyTree(Tree src_tree)
+BinaryTree CopyTree(BinaryTree src_tree)
 {
 	if (src_tree)
 	{

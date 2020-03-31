@@ -27,9 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Tree\Tree.c">
-      <Filter>Tree</Filter>
-    </ClCompile>
     <ClCompile Include="main.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -42,11 +39,14 @@
     <ClCompile Include="Tree\queue\queue.c">
       <Filter>Tree\queue</Filter>
     </ClCompile>
+    <ClCompile Include="Tree\BinaryTree.c">
+      <Filter>Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree\BTree.c">
+      <Filter>Tree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Tree\Tree.h">
-      <Filter>Tree</Filter>
-    </ClInclude>
     <ClInclude Include="Tree\link_list\link_list.h">
       <Filter>Tree\link_list</Filter>
     </ClInclude>
@@ -55,6 +55,12 @@
     </ClInclude>
     <ClInclude Include="Tree\queue\queue.h">
       <Filter>Tree\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree\BinaryTree.h">
+      <Filter>Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree\BTree.h">
+      <Filter>Tree</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

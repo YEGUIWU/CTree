@@ -139,16 +139,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
+    <ClCompile Include="Tree\BTree.c" />
     <ClCompile Include="Tree\link_list\link_list.c" />
     <ClCompile Include="Tree\queue\queue.c" />
     <ClCompile Include="Tree\stack\stack.c" />
-    <ClCompile Include="Tree\Tree.c" />
+    <ClCompile Include="Tree\BinaryTree.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Tree\BTree.h" />
     <ClInclude Include="Tree\link_list\link_list.h" />
     <ClInclude Include="Tree\queue\queue.h" />
     <ClInclude Include="Tree\stack\stack.h" />
-    <ClInclude Include="Tree\Tree.h" />
+    <ClInclude Include="Tree\BinaryTree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
