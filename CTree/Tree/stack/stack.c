@@ -4,7 +4,7 @@ void InitStack(Stack* S)
 {
 	InitList(S);
 }
-Stack DestroyStack(Stack S)
+int DestroyStack(Stack* S)
 {
 	return DestroyList(S);
 }
@@ -12,13 +12,13 @@ _Bool StackIsEmpty(Stack S)
 {
 	return ListIsEmpty(S);
 }
-Stack Push(const StackElementType elem, Stack S)
+int Push(const StackElementType elem, Stack* pS)
 {
-	return PushFront(elem, S);
+	return ListPushBack(elem, pS);
 }
-Stack Pop(Stack S)
+int Pop(Stack* pS)
 {
-	return PopFront(S);
+	return ListPopBack(pS);
 }
 StackElementType Top(Stack S)
 {

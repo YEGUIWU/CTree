@@ -15,11 +15,10 @@ typedef ListPosition  QueuePosition;
 #endif // LINK_QUEUE
 
 void InitQueue(Queue* Q);
-Queue DestroyQueue(Queue Q);
 _Bool QueueIsEmpty(Queue Q);
-Queue EnQueue(const QueueElementType elem, Queue Q);//入队
 QueueElementType FirstOfQueue(Queue Q);
-Queue DeQueue(Queue Q);//出队
+int EnQueue(const QueueElementType elem, Queue *pQ);//入队
+int DeQueue(Queue* pQ);//出队
 unsigned int QueueSize(Queue Q);
-Queue DestroyQueue(Queue Q);
+int DestroyQueue(Queue* Q);
 #endif

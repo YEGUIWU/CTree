@@ -3,7 +3,7 @@ void InitQueue(Queue* Q)
 {
 	InitList(Q);
 }
-Queue DestroyQueue(Queue Q)
+int DestroyQueue(Queue* Q)
 {
 	return DestroyList(Q);
 }
@@ -11,13 +11,13 @@ _Bool QueueIsEmpty(Queue Q)
 {
 	return ListIsEmpty(Q);
 }
-Queue EnQueue(const QueueElementType elem, Queue Q)
+int EnQueue(const QueueElementType elem, Queue* pQ)
 {
-	return PushBack(elem, Q);
+	return ListPushBack(elem, pQ);
 }
-Queue DeQueue(Queue Q)
+int DeQueue(Queue* pQ)
 {
-	return PopFront(Q);
+	return ListPopFront(pQ);
 }
 QueueElementType FirstOfQueue(Queue Q)
 {

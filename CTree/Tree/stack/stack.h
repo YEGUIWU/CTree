@@ -14,11 +14,10 @@ typedef ListPosition  StackPosition;
 #endif // LINK_Stack
 
 void InitStack(Stack* S);
-Stack DestroyStack(Stack S);
 _Bool StackIsEmpty(Stack S);
-Stack Push(const StackElementType elem, Stack S);//入队
+int Push(const StackElementType elem, Stack* pS);//入队
+int Pop(Stack *pS);//出队
 StackElementType Top(Stack S);
-Stack Pop(Stack S);//出队
 unsigned int StackSize(Stack S);
-Stack DestroyStack(Stack S);
+int DestroyStack(Stack* S);
 #endif //_STACK_H_

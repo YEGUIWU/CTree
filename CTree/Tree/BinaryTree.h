@@ -7,8 +7,10 @@
 
 //-------------------------------------------------------
 //						预处理设定
+//普通二叉树
+#define COMMON_TREE 1
 //使用二叉搜索树
-#define SEARCH_TREE 1
+//#define SEARCH_TREE 1
 //使用平衡二叉搜索树
 //#define AVL_TREE 1
 //使用伸展树
@@ -19,7 +21,7 @@
 //使用层序遍历
 #define USE_SEQUENCE_ORDER 1
 //开启非递归遍历
-#define NON_RECURSION 1
+//#define NON_RECURSION 1
 
 
 
@@ -34,7 +36,29 @@ typedef struct TreeNode TreeNode;
 typedef TreeNode* TreePosition;
 //搜索树类型
 typedef struct TreeNode* BinaryTree;
-#ifdef  SEARCH_TREE
+
+
+
+#ifdef  COMMON_TREE
+struct BinaryTreeArrayNode
+{
+	int data;
+	int parent;
+};
+typedef struct  BinaryTreeArrayNode* BinaryTreeArray;
+
+struct TreeNode
+{
+	TreeElementType Element;			//存储数据
+	struct TreeNode* Left;              //左子树
+	struct TreeNode* Right;             //右子树
+#ifdef NON_RECURSION
+	long VisitCount;
+#endif // NON_RECURSION
+};
+
+int BinaryTree_MakeTree(BinaryTree* Tree, BinaryTreeArray pArray, int n);
+#elif SEARCH_TREE
 //-------------------------------------------------------
 //						二叉搜索树
 struct TreeNode

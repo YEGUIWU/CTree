@@ -1,9 +1,7 @@
 #include "BinaryTree.h"
 
-
-
-
 static const TreeElementType NullElem = 0;
+
 static TreePosition NullNode = NULL;
 
 typedef TreeNode* PtrToTreeNode;
@@ -18,7 +16,44 @@ PtrToTreeNode MakeTreeNode(TreeElementType X);
 PtrToTreeNode DestoryTreeNode(PtrToTreeNode P);
 
 
-#ifdef SEARCH_TREE_COME_TRUE
+#ifdef COMMON_TREE
+
+int BinaryTree_MakeTree(BinaryTree* Tree, BinaryTreeArray pArray, int n)
+{
+	PtrToTreeNode* ptrs = (PtrToTreeNode*)calloc(n, sizeof(PtrToTreeNode));
+
+	for (int i = 0; i < n; ++i)
+	{
+		ptrs[i] = MakeTreeNode(pArray[i].data);
+	}
+	*Tree = ptrs[0];
+	PtrToTreeNode pTmp;
+	for (int i = 1; i < n; ++i)
+	{
+		pTmp = ptrs[pArray[i].parent];//找爸爸位置
+		if (!pTmp->Left)//爸爸还没有孩子，就做爸爸的孩子
+		{
+			pTmp->Left = ptrs[i];
+		}
+		else//爸爸有孩子了，就给爸爸的孩子当孩子
+		{
+			PtrToTreeNode pt;
+			for (pt = pTmp->Left; pt->Right; pt = pt->Right)
+			{
+				//do nothing
+			}
+			pt->Right = ptrs[i];
+			
+		}
+	}
+	free(ptrs);
+	return 0;
+}
+BinaryTree InitializeTree()
+{
+	return NullNode;
+}
+#elif SEARCH_TREE_COME_TRUE
 #pragma region 搜索树
 //--------------------------------------------------
 //初始化
@@ -556,7 +591,7 @@ PtrToTreeNode MakeTreeNode(TreeElementType X)
 	return p;
 }
 //销毁树结点
-PtrToTreeNode DestoryTreeNode(PtrToTreeNode P)
+PtrToTreeNode DestroyTreeNode(PtrToTreeNode P)
 {
 	free(P);
 	return NULL;
@@ -653,13 +688,13 @@ void PreOrder(BinaryTree root, void(*func)(BinaryTree))
 		if (!TreeIsEmpty(tmpBinaryTree))
 		{
 			func(tmpBinaryTree);
-			S = Push(tmpBinaryTree, S);
+			Push(tmpBinaryTree, &S);
 			tmpBinaryTree = tmpBinaryTree->Left;
 		}
 		else
 		{
 			tmpBinaryTree = (BinaryTree)Top(S);
-			S = Pop(S);
+			Pop(&S);
 			tmpBinaryTree = tmpBinaryTree->Right;
 		}
 	}
@@ -691,14 +726,14 @@ void InOrder(BinaryTree root, void(*func)(BinaryTree))
 	{
 		if (!TreeIsEmpty(tmpBinaryTree))
 		{
-			S = Push(tmpBinaryTree, S);
+			Push(tmpBinaryTree, &S);
 			tmpBinaryTree = tmpBinaryTree->Left;
 		}
 		else
 		{
 			tmpBinaryTree = (BinaryTree)Top(S);
 			func(tmpBinaryTree);
-			S = Pop(S);
+			Pop(&S);
 			tmpBinaryTree = tmpBinaryTree->Right;
 		}
 	}
@@ -731,13 +766,13 @@ void PostOrder(BinaryTree root, void(*func)(BinaryTree))
 		if (!TreeIsEmpty(tmpBinaryTree))
 		{
 			tmpBinaryTree->VisitCount = 1;
-			S = Push(tmpBinaryTree, S);
+			Push(tmpBinaryTree, &S);
 			tmpBinaryTree = tmpBinaryTree->Left;
 		}
 		else
 		{
 			tmpBinaryTree = (BinaryTree)Top(S);
-			S = Pop(S);
+			Pop(&S);
 			if (tmpBinaryTree->VisitCount == 2)
 			{
 				func(tmpBinaryTree);
@@ -746,7 +781,7 @@ void PostOrder(BinaryTree root, void(*func)(BinaryTree))
 			else
 			{
 				++tmpBinaryTree->VisitCount;
-				S = Push(tmpBinaryTree, S);
+			    Push(tmpBinaryTree, &S);
 				tmpBinaryTree = tmpBinaryTree->Right;
 			}
 		}
@@ -767,24 +802,25 @@ void SeqOrder(BinaryTree root, void(*func)(BinaryTree))
 
 	Queue Q;
 	InitQueue(&Q);
-	Q = EnQueue(root, Q);					 //根结点先入队
+	EnQueue(root, &Q);					 //根结点先入队
 	BinaryTree tmpBinaryTree = root;
 
 	while (!QueueIsEmpty(Q))				 //队列不空
 	{
 		tmpBinaryTree = FirstOfQueue(Q);			 //获取队头元素
-		Q = DeQueue(Q);						 //对头离队
+		DeQueue(&Q);						 //对头离队
 		func(tmpBinaryTree);						 //访问当前树结点
 
 		if (!TreeIsEmpty(tmpBinaryTree->Left))	 //左子树是否为空
 		{
-			Q = EnQueue(tmpBinaryTree->Left, Q);   //不为空入队
+			EnQueue(tmpBinaryTree->Left, &Q);   //不为空入队
 		}
 		if (!TreeIsEmpty(tmpBinaryTree->Right))	 //右子树是否为空
 		{
-			Q = EnQueue(tmpBinaryTree->Right, Q);  //不为空入队
+			EnQueue(tmpBinaryTree->Right, &Q);  //不为空入队
 		}
 	}
+	DestroyQueue(&Q);
 }
 #endif // USE_SEQUENCE_ORDER
 #pragma endregion

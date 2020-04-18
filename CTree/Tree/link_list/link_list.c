@@ -1,7 +1,7 @@
-#include "link_list.h"
+ï»¿#include "link_list.h"
 typedef ListNode* PtrToListNode;
 
-#pragma region Í¨ÓÃ
+#pragma region é€šç”¨
 //-----------------------------------------------------
 void ListError(const char* errMsg)
 {
@@ -14,7 +14,7 @@ void ListFailError(const char* errMsg)
 	exit(-1);
 }
 //-----------------------------------------------------
-//½«Êý¾Ý·â×°³É½áµã
+//å°†æ•°æ®å°è£…æˆç»“ç‚¹
 inline PtrToListNode MakeListNode(ListElementType elem)
 {
 	PtrToListNode p = calloc(1, sizeof(ListNode));
@@ -29,44 +29,63 @@ inline PtrToListNode MakeListNode(ListElementType elem)
 	return p;
 }
 //-----------------------------------------------------
-//ÅÐ¶ÏÄ³¸öÎ»ÖÃÊÇ·ñÎ»ÓÚÁ´±íµÄ½áÎ²
+//åˆ¤æ–­æŸä¸ªä½ç½®æ˜¯å¦ä½äºŽé“¾è¡¨çš„ç»“å°¾
 _Bool PosInListIsLast(ListPosition P)
 {
 	return P->Next == NULL;
 }
 //-----------------------------------------------------
-//Ïú»ÙÄ³¸ö½áµã
+//é”€æ¯æŸä¸ªç»“ç‚¹
 void DestroyListNode(PtrToListNode p)
 {
 	//free(p->ELement);
 	free(p);
 }
 //-----------------------------------------------------
-//»ñÈ¡Á´±íµÄµÚÒ»¸ö½ÚµãµÄÎ»ÖÃ
+//èŽ·å–é“¾è¡¨çš„ç¬¬ä¸€ä¸ªèŠ‚ç‚¹çš„ä½ç½®
 ListElementType FirstOfList(List L)
 {
 	return RetrieveFromListPos(HeadOfList(L));
 }
-//»ñÈ¡Á´±íµÄ×îºóÒ»¸öÔªËØ
+//èŽ·å–é“¾è¡¨çš„æœ€åŽä¸€ä¸ªå…ƒç´ 
 ListElementType FinalOfList(List L)
 {
 	return RetrieveFromListPos(TailOfList(L));
 }
 //-----------------------------------------------------
-//´Ó½ÚµãÎ»ÖÃÈ¡³öÔªËØµÄÖµ
+//ä»ŽèŠ‚ç‚¹ä½ç½®å–å‡ºå…ƒç´ çš„å€¼
 ListElementType RetrieveFromListPos(ListPosition P)
 {
 	return P->ELement;
 }
 //-----------------------------------------------------
-//´òÓ¡Á´±í
+//æ‰“å°é“¾è¡¨
 void DisplayList(List L, void(*pDisplayFunc)(ListPosition))
 {
 	for (ListPosition p = HeadOfList(L); p; p = p->Next)
+	{
 		pDisplayFunc(p);
+	}
+}
+
+//éåŽ†é“¾è¡¨
+void ListForEach(List L, void(*pFunc)(ListPosition))
+{
+	for (ListPosition p = HeadOfList(L); p; p = p->Next)
+	{
+		pFunc(p);
+	}
+}
+//å¸¦å‚éåŽ†é“¾è¡¨
+void ListForEachWithArg(List L, void(*pFunc)(ListPosition, void*), void* arg)
+{
+	for (ListPosition p = HeadOfList(L); p; p = p->Next)
+	{
+		pFunc(p, arg);
+	}
 }
 //-----------------------------------------------------
-//²éÕÒÄ³¸öÔªËØµÄÎ»ÖÃ
+//æŸ¥æ‰¾æŸä¸ªå…ƒç´ çš„ä½ç½®
 ListPosition FindIf(_Bool(*pFunc)(), List L)
 {
 	for (ListPosition P = HeadOfList(L); P; P = P->Next)
@@ -77,19 +96,14 @@ ListPosition FindIf(_Bool(*pFunc)(), List L)
 	return NULL;
 }
 //-----------------------------------------------------
-/*  Á´±í¿ìËÙÅÅÐò  */
+/*  é“¾è¡¨å¿«é€ŸæŽ’åº  */
 
 //-----------------------------------------------------
-static void SwapNode(void* p1, void* p2, size_t size)
+static void SwapNode(PtrToListNode p1, PtrToListNode p2)
 {
-	void* pt = malloc(size);
-	if (pt)
-	{
-		memcpy(pt, p1, size);
-		memcpy(p1, p2, size);
-		memcpy(p2, pt, size);
-	}
-	free(pt);
+	ListElementType tmp = p1->ELement;
+	p1->ELement = p2->ELement;
+	p2->ELement = tmp;
 }
 //-----------------------------------------------------
 void static SortListBase(PtrToListNode pHead, PtrToListNode pEnd, int(*pCmp)(ListElementType, ListElementType))
@@ -99,19 +113,17 @@ void static SortListBase(PtrToListNode pHead, PtrToListNode pEnd, int(*pCmp)(Lis
 		if (pHead != pEnd)
 		{
 			PtrToListNode pIndex = pHead;
-			for (PtrToListNode pGo = pIndex->Next; pGo != pEnd; pGo = pGo->Next)
+			for (PtrToListNode pGo = pHead->Next; pGo != pEnd; pGo = pGo->Next)
 			{
 				if (pCmp(pGo->ELement, pHead->ELement) > 0)
 				{
 					pIndex = pIndex->Next;
-					SwapNode(pGo, pIndex, sizeof(ListNode));
-					SwapNode(&pGo->Next, &pIndex->Next, sizeof(PtrToListNode));
+					SwapNode(pGo, pIndex);
 				}
 			}
-			SwapNode(pIndex, pHead, sizeof(ListNode));
-			SwapNode(&pIndex->Next, &pHead->Next, sizeof(PtrToListNode));
+			SwapNode(pIndex, pHead);
 
-			SortListBase(pHead, pIndex, pCmp);
+			SortListBase(pHead,pIndex, pCmp);
 			SortListBase(pIndex->Next, pEnd, pCmp);
 		}
 	}
@@ -120,7 +132,7 @@ void SortList(List lst, int(*pCmp)(ListElementType, ListElementType))
 {
 #ifdef SINGLE_LINK_LIST
 
-	SortListBase(lst, NULL, pCmp);
+	SortListBase(HeadOfList(lst), NULL, pCmp);
 #elif DOUBLE_LINK_LIST
 	SortListBase(lst.Head, lst.Tail, pCmp);
 #endif 
@@ -131,19 +143,19 @@ void SortList(List lst, int(*pCmp)(ListElementType, ListElementType))
 
 #ifdef SINGLE_LINK_LIST
 //-----------------------------------------------------
-//³õÊ¼»¯Á´±í
+//åˆå§‹åŒ–é“¾è¡¨
 void InitList(List* L)
 {
 	*L = NULL;
 }
 //-----------------------------------------------------
-//ÅÐ¶ÏÁ´±íÊÇ·ñÎª¿Õ
+//åˆ¤æ–­é“¾è¡¨æ˜¯å¦ä¸ºç©º
 _Bool ListIsEmpty(List L)
 {
 	return L == NULL;
 }
 //-----------------------------------------------------
-//²éÕÒÄ³¸öÔªËØµÄÎ»ÖÃ
+//æŸ¥æ‰¾æŸä¸ªå…ƒç´ çš„ä½ç½®
 ListPosition FindInList(ListElementType X, List L)
 {
 	for (ListPosition P = L; P; P = P->Next)
@@ -154,7 +166,7 @@ ListPosition FindInList(ListElementType X, List L)
 	return NULL;
 }
 //-----------------------------------------------------
-//´ÓÁ´±íÖÐÉ¾³ýÄ³¸öÔªËØ
+//ä»Žé“¾è¡¨ä¸­åˆ é™¤æŸä¸ªå…ƒç´ 
 void DeleteFromList(ListElementType X, List L)
 {
 	ListPosition P, TmpCell;
@@ -167,10 +179,10 @@ void DeleteFromList(ListElementType X, List L)
 	}
 }
 //-----------------------------------------------------
-//Î²²åÈëÔªËØ
+//å°¾æ’å…¥å…ƒç´ 
 List PushBack(ListElementType X, List L)
 {
-	if (!L)//Èç¹û¿Õ
+	if (!L)//å¦‚æžœç©º
 	{
 		L = MakeListNode(X);
 	}
@@ -184,7 +196,7 @@ List PushBack(ListElementType X, List L)
 	return L;
 }
 //-----------------------------------------------------
-//²éÕÒÄ³¸öÔªËØµÄÉÏÒ»¸öÎ»ÖÃ
+//æŸ¥æ‰¾æŸä¸ªå…ƒç´ çš„ä¸Šä¸€ä¸ªä½ç½®
 ListPosition FindPrePosFromList(ListElementType X, List L)
 {
 	for (ListPosition P = L; P->Next; P = P->Next)
@@ -195,7 +207,7 @@ ListPosition FindPrePosFromList(ListElementType X, List L)
 	return NULL;
 }
 //-----------------------------------------------------
-//Í·²åÈëÔªËØ
+//å¤´æ’å…¥å…ƒç´ 
 List PushFront(ListElementType X, List L)
 {
 	if (!L)
@@ -212,19 +224,19 @@ List PushFront(ListElementType X, List L)
 	return L;
 }
 //-----------------------------------------------------
-//É¾³ýÎ²²¿
+//åˆ é™¤å°¾éƒ¨
 List PopBack(List L)
 {
-	if (!L) //¿Õ±í
+	if (!L) //ç©ºè¡¨
 	{
 		//do nothing
 	}
-	else if (!L->Next)//ÓÐ1¸öÔªËØ
+	else if (!L->Next)//æœ‰1ä¸ªå…ƒç´ 
 	{
 		DestroyListNode(HeadOfList(L));
 		L = NULL;
 	}
-	else //2¸öÒÔÉÏ
+	else //2ä¸ªä»¥ä¸Š
 	{
 		PtrToListNode p;
 		for (p = L; p->Next->Next; p = p->Next)
@@ -235,7 +247,7 @@ List PopBack(List L)
 	return L;
 }
 //-----------------------------------------------------
-//É¾³ýÍ·²¿
+//åˆ é™¤å¤´éƒ¨
 List PopFront(List L)
 {
 	if (ListIsEmpty(L))
@@ -247,8 +259,84 @@ List PopFront(List L)
 	DestroyListNode(HeadOfList(L));
 	return p;
 }
+
+//å°¾æ’å…¥å…ƒç´ 
+int ListPushBack(ListElementType X, List* L)
+{
+	if (!L)
+	{
+		return -1;
+	}
+	if (!*L)//å¦‚æžœç©º
+	{
+		*L = MakeListNode(X);
+	}
+	else
+	{
+		PtrToListNode p;
+		for (p = HeadOfList(*L); p->Next; p = p->Next)
+			;
+		p->Next = MakeListNode(X);
+	}
+	return 0;
+}
+//å¤´æ’å…¥å…ƒç´ 
+int ListPushFront(ListElementType X, List* L)
+{
+	if (!L)
+	{
+		return -1;
+	}
+	if (!*L)
+	{
+		*L = MakeListNode(X);
+
+	}
+	else
+	{
+		PtrToListNode p = MakeListNode(X);
+		p->Next = *L;
+		*L = p;
+	}
+	return 0;
+}
+//åˆ é™¤å°¾éƒ¨
+int ListPopBack(List* L)
+{
+	if (!L || !*L) //ç©ºè¡¨
+	{
+		return -1;
+	}
+	else if (!(*L)->Next)//æœ‰1ä¸ªå…ƒç´ 
+	{
+		DestroyListNode(HeadOfList(*L));
+		*L = NULL;
+	}
+	else //2ä¸ªä»¥ä¸Š
+	{
+		PtrToListNode p;
+		for (p = HeadOfList(*L); p->Next->Next; p = p->Next)
+			;
+		DestroyListNode(p->Next);
+		p->Next = NULL;
+	}
+	return 0;
+}
+//åˆ é™¤å¤´éƒ¨
+int ListPopFront(List* L)
+{
+	if (ListIsEmpty(*L))
+	{
+		perror("List has nothing\n");
+		return -1;
+	}
+	PtrToListNode p = HeadOfList(*L)->Next;
+	DestroyListNode(HeadOfList(*L));
+	(*L) = p;
+	return 0;
+}
 //-----------------------------------------------------
-//ÍùÄ³¸öÎ»ÖÃ·ÅÈëÄ³¸öÔªËØ
+//å¾€æŸä¸ªä½ç½®æ”¾å…¥æŸä¸ªå…ƒç´ 
 void InsertToList(ListElementType X, ListPosition P)
 {
 	if (!P)
@@ -265,29 +353,29 @@ void InsertToList(ListElementType X, ListPosition P)
 	}
 }
 //-----------------------------------------------------
-//Çå¿ÕÁ´±í
-List DestroyList(List L)
+//æ¸…ç©ºé“¾è¡¨
+int DestroyList(List* L)
 {
-	if (!ListIsEmpty(L))
+	if (!ListIsEmpty(*L))
 	{
-		for (ListPosition pcur = HeadOfList(L), pbark; pcur; pcur = pbark)
+		for (ListPosition pcur = HeadOfList(*L), pbark; pcur; pcur = pbark)
 		{
 			pbark = pcur->Next;
 			free(pcur);
 		}
 	}
-
-	return NULL;
+	*L = NULL;
+	return 0;
 }
 
 //-----------------------------------------------------
-//»ñÈ¡Á´±íÍ·½ÚµãÎ»ÖÃ
+//èŽ·å–é“¾è¡¨å¤´èŠ‚ç‚¹ä½ç½®
 ListPosition HeadOfList(List L)
 {
 	return L;
 }
 //-----------------------------------------------------
-//·µ»ØÉÏÒ»¸öÎ»ÖÃ
+//è¿”å›žä¸Šä¸€ä¸ªä½ç½®
 ListPosition AdvanceOfListPos(ListPosition P, List L)
 {
 	for (ListPosition pt = L; pt; pt = pt->Next)
@@ -297,7 +385,7 @@ ListPosition AdvanceOfListPos(ListPosition P, List L)
 	}
 	return NULL;
 }
-//»ñÈ¡Á´±íÎ²½áµãÎ»ÖÃ
+//èŽ·å–é“¾è¡¨å°¾ç»“ç‚¹ä½ç½®
 ListPosition TailOfList(List L)
 {
 	ListPosition p = L;
@@ -324,23 +412,23 @@ unsigned int ListSize(List L)
 
 #elif DOUBLE_LINK_LIST
 //-----------------------------------------------------
-//³õÊ¼»¯Á´±í
+//åˆå§‹åŒ–é“¾è¡¨
 void InitList(List* L)
 {
-	if (L);
+	if (L)
 	{
 		L->Head = L->Tail = NULL;
 		L->Length = 0;
 	}
 }
 //-----------------------------------------------------
-//ÅÐ¶ÏÁ´±íÊÇ·ñÎª¿Õ
+//åˆ¤æ–­é“¾è¡¨æ˜¯å¦ä¸ºç©º
 _Bool ListIsEmpty(List L)
 {
 	return L.Head == NULL;
 }
 //-----------------------------------------------------
-//²éÕÒÄ³¸öÔªËØµÄÎ»ÖÃ
+//æŸ¥æ‰¾æŸä¸ªå…ƒç´ çš„ä½ç½®
 ListPosition FindInList(ListElementType X, List L)
 {
 	for (ListPosition P = HeadOfList(L); P; P = P->Next)
@@ -360,10 +448,21 @@ ListPosition RFindInList(ListElementType X, List L)
 	return NULL;
 }
 //-----------------------------------------------------
-//Î²²åÈëÔªËØ
+//æŸ¥æ‰¾æŸä¸ªå…ƒç´ çš„ä¸Šä¸€ä¸ªä½ç½®
+ListPosition FindPrePosFromList(ListElementType X, List L)
+{
+	for (ListPosition P = HeadOfList(L); P->Next; P = P->Next)
+	{
+		if (P->Next->ELement == X)
+			return P;
+	}
+	return NULL;
+}
+//-----------------------------------------------------
+//å°¾æ’å…¥å…ƒç´ 
 List PushBack(ListElementType X, List L)
 {
-	if (ListIsEmpty(L))//Èç¹û¿Õ
+	if (ListIsEmpty(L))//å¦‚æžœç©º
 	{
 		L.Head = MakeListNode(X);
 		L.Tail = L.Head;
@@ -378,22 +477,12 @@ List PushBack(ListElementType X, List L)
 	++L.Length;
 	return L;
 }
+
 //-----------------------------------------------------
-//²éÕÒÄ³¸öÔªËØµÄÉÏÒ»¸öÎ»ÖÃ
-ListPosition FindPrePosFromList(ListElementType X, List L)
-{
-	for (ListPosition P = HeadOfList(L); P->Next; P = P->Next)
-	{
-		if (P->Next->ELement == X)
-			return P;
-	}
-	return NULL;
-}
-//-----------------------------------------------------
-//Í·²åÈëÔªËØ
+//å¤´æ’å…¥å…ƒç´ 
 List PushFront(ListElementType X, List L)
 {
-	if (ListIsEmpty(L))//Èç¹û¿Õ
+	if (ListIsEmpty(L))//å¦‚æžœç©º
 	{
 		L.Head = MakeListNode(X);
 		L.Tail = L.Head;
@@ -409,20 +498,20 @@ List PushFront(ListElementType X, List L)
 	return L;
 }
 //-----------------------------------------------------
-//É¾³ýÎ²²¿
+//åˆ é™¤å°¾éƒ¨
 List PopBack(List L)
 {
-	if (ListIsEmpty(L)) //¿Õ±í
+	if (ListIsEmpty(L)) //ç©ºè¡¨
 	{
 		//do nothing
 	}
-	else if (L.Head == L.Tail)//ÓÐ1¸öÔªËØ
+	else if (L.Head == L.Tail)//æœ‰1ä¸ªå…ƒç´ 
 	{
 		DestroyListNode(HeadOfList(L));
 		L.Tail = L.Head = NULL;
 		L.Length = 0;
 	}
-	else //2¸öÒÔÉÏ
+	else //2ä¸ªä»¥ä¸Š
 	{
 		PtrToListNode Barkup = TailOfList(L)->Pre;
 		DestroyListNode(TailOfList(L));
@@ -432,7 +521,7 @@ List PopBack(List L)
 	return L;
 }
 //-----------------------------------------------------
-//É¾³ýÍ·²¿
+//åˆ é™¤å¤´éƒ¨
 List PopFront(List L)
 {
 	if (ListIsEmpty(L))
@@ -446,8 +535,97 @@ List PopFront(List L)
 	--L.Length;
 	return L;
 }
+
+//å°¾æ’å…¥å…ƒç´ 
+int ListPushBack(ListElementType X, List* L)
+{
+	if (!L)
+	{
+		return -1;
+	}
+	if (ListIsEmpty(*L))//å¦‚æžœç©º
+	{
+		L->Head = MakeListNode(X);
+		L->Tail = L->Head;
+	}
+	else
+	{
+		PtrToListNode NewNode = MakeListNode(X);
+		TailOfList(*L)->Next = NewNode;
+		NewNode->Pre = TailOfList(*L);
+		L->Tail = NewNode;
+	}
+	++L->Length;
+	return 0;
+}
+//å¤´æ’å…¥å…ƒç´ 
+int ListPushFront(ListElementType X, List* L)
+{
+	if (!L)
+	{
+		return -1;
+	}
+	if (ListIsEmpty(*L))//å¦‚æžœç©º
+	{
+		L->Head = MakeListNode(X);
+		L->Tail = L->Head;
+	}
+	else
+	{
+		PtrToListNode NewNode = MakeListNode(X);
+		HeadOfList(*L)->Pre = NewNode;
+		NewNode->Next = HeadOfList(*L);
+		L->Head = NewNode;
+	}
+	++L->Length;
+	return 0;
+}
+//åˆ é™¤å°¾éƒ¨
+int ListPopBack(List* L)
+{
+	if (!L)
+	{
+		return -1;
+	}
+	if (ListIsEmpty(*L)) //ç©ºè¡¨
+	{
+		//do nothing
+	}
+	else if (L->Head == L->Tail)//æœ‰1ä¸ªå…ƒç´ 
+	{
+		DestroyListNode(HeadOfList(*L));
+		L->Tail = L->Head = NULL;
+		L->Length = 0;
+	}
+	else //2ä¸ªä»¥ä¸Š
+	{
+		PtrToListNode Barkup = TailOfList(*L)->Pre;
+		DestroyListNode(TailOfList(*L));
+		L->Tail = Barkup;
+		--L->Length;
+	}
+	return 0;
+}
+//åˆ é™¤å¤´éƒ¨
+int ListPopFront(List* L)
+{
+	if (!L)
+	{
+		return -1;
+	}
+	if (ListIsEmpty(*L))
+	{
+		perror("List has nothing\n");
+		return -1;
+	}
+	PtrToListNode Barkup = HeadOfList(*L)->Next;
+	DestroyListNode(HeadOfList(*L));
+	L->Head = Barkup;
+	--L->Length;
+	return 0;
+}
 //-----------------------------------------------------
-//ÍùÄ³¸öÎ»ÖÃ·ÅÈëÄ³¸öÔªËØ
+//å¾€æŸä¸ªä½ç½®æ”¾å…¥æŸä¸ªå…ƒç´ 
 void InsertToList(ListElementType X, ListPosition P)
 {
 	if (!P)
@@ -459,7 +637,7 @@ void InsertToList(ListElementType X, ListPosition P)
 	if (TmpCell)
 	{
 		TmpCell->ELement = X;
-		if (P->Next)//²»ÊÇ×îºóÒ»¸öÎ»ÖÃ
+		if (P->Next)//ä¸æ˜¯æœ€åŽä¸€ä¸ªä½ç½®
 		{
 			P->Next->Pre = TmpCell;
 			TmpCell->Next = P->Next;
@@ -478,19 +656,19 @@ void InsertToList(ListElementType X, ListPosition P)
 }
 
 //-----------------------------------------------------
-//»ñÈ¡Á´±íÍ·½ÚµãÎ»ÖÃ
+//èŽ·å–é“¾è¡¨å¤´èŠ‚ç‚¹ä½ç½®
 ListPosition HeadOfList(List L)
 {
 	return L.Head;
 }
 //-----------------------------------------------------
-//·µ»ØÉÏÒ»¸öÎ»ÖÃ
+//è¿”å›žä¸Šä¸€ä¸ªä½ç½®
 ListPosition AdvanceOfListPos(ListPosition P)
 {
 	return P->Pre;
 }
 //----------------------------------------------------
-//»ñÈ¡Á´±íÎ²½áµãÎ»ÖÃ
+//èŽ·å–é“¾è¡¨å°¾ç»“ç‚¹ä½ç½®
 ListPosition TailOfList(List L)
 {
 	return L.Tail;
@@ -501,19 +679,23 @@ unsigned int ListSize(List L)
 	return L.Length;
 }
 //-----------------------------------------------------
-//Çå¿ÕÁ´±í
-List DestroyList(List L)
+//æ¸…ç©ºé“¾è¡¨
+int DestroyList(List* L)
 {
-	if (!ListIsEmpty(L))
+	if (!L)
 	{
-		for (ListPosition pcur = HeadOfList(L), pbark; pcur; pcur = pbark)
+		return -1;
+	}
+	if (!ListIsEmpty(*L))
+	{
+		for (ListPosition pcur = HeadOfList(*L), pbark; pcur; pcur = pbark)
 		{
 			pbark = pcur->Next;
 			free(pcur);
 		}
 	}
-	L.Head = L.Tail = NULL;
-	L.Length = 0;
-	return L;
+	L->Head = L->Tail = NULL;
+	L->Length = 0;
+	return 0;
 }
 #endif // SINGLE_LINKE_LIST
