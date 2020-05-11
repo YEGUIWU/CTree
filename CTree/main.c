@@ -74,7 +74,7 @@ static void inline Tips()
     printf("[输入9] 退出\n");
     Output_Cutoff_Rule();
 }
-int main1()
+int main()
 {
 	char choice;//用户选择
 	char buf[BUFSIZ];
@@ -91,7 +91,7 @@ int main1()
 		{
 		case '0':
             printf("\n表结构如下\n");
-            printf("---------------\n");
+            printf("----------------------\n");
             printf("| 编号 | 数据 | 双亲 |\n");
             for (int i = 0; i < n; ++i)
             {

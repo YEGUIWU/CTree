@@ -122,14 +122,14 @@ int BTree_MakeTree(BTree* pTree, BTreeArray tree_array, int n)
     PtrToBTreeNode pTmp;
     for (int i = 1; i < n; ++i)
     {
-        pTmp = trees[tree_array[i].parent];
+        pTmp = trees[tree_array[i].parent];//获取父亲结点
         
         for (int j = 0; j < g_nNodes; ++j)
         {
-            if (!pTmp->Children[j])
+            if (!pTmp->Children[j])//如果的儿子数没有爆满
             {
                 //printf("%d -> %d\n", i, tree_array[i].parent);
-                pTmp->Children[j] = trees[i];
+                pTmp->Children[j] = trees[i];//成为儿子
                 break;
             }
         }
@@ -188,9 +188,10 @@ static void PostOrderBase(BTreePosition root, void(*func)(BTreePosition))
     }
     for (int i = 0; i < BTree_GetCountOfNode(); ++i)
     {
-        PreOrderBase(root->Children[i], func);
+        PostOrderBase(root->Children[i], func);
     }
     func(root);
+
 #else
     if (!root)
     {
@@ -198,20 +199,20 @@ static void PostOrderBase(BTreePosition root, void(*func)(BTreePosition))
     }
     Stack stack;
     InitStack(&stack);
-    stack = Push(root, stack);
+    Push(root, &stack);
     PtrToBTreeNode ptr = NULL;
     while (!StackIsEmpty(stack))
     {
         ptr = Top(stack);
-        stack = Pop(stack);
+        Pop(&stack);
 
-        func(root);
         for (int i = 0; i < g_nNodes; ++i)
         {
-            stack = Push(root->Children[i], stack);
+            Push(root->Children[i], &stack);
         }
+        func(root);
     }
-    stack = DestroyStack(stack);
+    DestroyStack(&stack);
 #endif
 }
 //后序遍历
@@ -221,18 +222,6 @@ void BTree_PostOrder(BTree root, void(*func)(BTreePosition))
 }
 //层序遍历
 #include "queue/queue.h"
-typedef struct queue_elem
-{
-    void* pos;
-    int step;
-}queue_elem;
-queue_elem* MakeQueueElem(void*pos, int step)
-{
-    queue_elem* p = malloc(sizeof(queue_elem));
-    p->pos = pos;
-    p->step = step;
-    return p;
-}
 void SeqOrderBase(BTreePosition root, void(*func)(BTreePosition))
 {
     if (!root)

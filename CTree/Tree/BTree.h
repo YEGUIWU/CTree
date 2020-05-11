@@ -25,6 +25,7 @@ typedef struct BTree
 	BTreePosition* positions;
 	int nPosition;
 }BTree;
+
 struct BTreeArrayNode
 {
 	int data;
