@@ -93,11 +93,13 @@ int main()
             printf("\n表结构如下\n");
             printf("----------------------\n");
             printf("| 编号 | 数据 | 双亲 |\n");
-            for (int i = 0; i < n; ++i)
+            if (pArray)
             {
-                printf("| %4d | %4c | %4d |\n", i, pArray[i].data, pArray[i].parent);
+                for (int i = 0; i < n; ++i)
+                {
+                    printf("| %4d | %4c | %4d |\n", i, pArray[i].data, pArray[i].parent);
+                }
             }
-           
             system("pause");
 			break;
 		case '1':
